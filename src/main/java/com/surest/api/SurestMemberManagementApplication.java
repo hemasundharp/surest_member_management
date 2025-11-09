@@ -13,26 +13,7 @@ import java.util.Properties;
 public class SurestMemberManagementApplication {
 
 	public static void main(String[] args) {
-		loadDotenv();
 		SpringApplication.run(SurestMemberManagementApplication.class, args);
 	}
-	private static void loadDotenv() {
-		try {
-			FileInputStream input = new FileInputStream(".env");
-			Properties prop = new Properties();
-			prop.load(input);
-			input.close();
-			
-
-			for (String name : prop.stringPropertyNames()) {
-				String value = prop.getProperty(name);
-				System.setProperty(name, value);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 }
