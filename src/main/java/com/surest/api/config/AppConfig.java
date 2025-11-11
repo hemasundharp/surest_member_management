@@ -30,7 +30,6 @@ public class AppConfig {
 	@Bean
 	 public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        // Register the JavaTimeModule to handle Java 8 date/time types
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }

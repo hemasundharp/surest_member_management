@@ -3,7 +3,7 @@ INSERT INTO role (id, name) VALUES
     (gen_random_uuid(), 'ADMIN'),
     (gen_random_uuid(), 'USER');
 
--- Seed data: users (hashed passwords recommended, but plain shown for clarity)
+-- Seed data: users
 -- Admin user
 INSERT INTO user_account (id, username, password_hash, role_id)
 SELECT gen_random_uuid(), 'admin', '$2a$10$yTFVncGBZpvlgyXa9/Wbo.qkEmrvwhuO3PDRjaguiu/amPpzNRY86', r.id

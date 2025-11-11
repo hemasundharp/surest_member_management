@@ -19,7 +19,7 @@ import com.surest.api.exception.InvalidLoginException;
 @AllArgsConstructor
 @Tag(name = "Authentication")
 @CrossOrigin(origins = "*")
-@Slf4j // ✅ Enable SLF4J Logging
+@Slf4j
 public class AuthController {
 
     private final UserService userService;
@@ -32,7 +32,7 @@ public class AuthController {
             AuthenticationResponse authenticationResponse = userService.authenticateUser(loginDto);
 
             if (authenticationResponse != null) {
-                log.info("✅ Login successful for user: {}", loginDto.getUsername());
+                log.info("Login successful for user: {}", loginDto.getUsername());
                 CommonResponseDTO<AuthenticationResponse> successResponse = new CommonResponseDTO<>(
                         true,
                         "Login successful",
@@ -40,7 +40,7 @@ public class AuthController {
                 );
                 return ResponseEntity.ok(successResponse);
             } else {
-                log.warn("⚠️ Login failed (null response) for user: {}", loginDto.getUsername());
+                log.warn("Login failed (null response) for user: {}", loginDto.getUsername());
                 CommonResponseDTO<AuthenticationResponse> failureResponse = new CommonResponseDTO<>(
                         false,
                         "Invalid username or password",
@@ -49,7 +49,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failureResponse);
             }
         } catch (InvalidLoginException e) {
-            log.warn("❌ Invalid credentials for username: {}", loginDto.getUsername());
+            log.warn("Invalid credentials for username: {}", loginDto.getUsername());
             CommonResponseDTO<AuthenticationResponse> failureResponse = new CommonResponseDTO<>(
                     false,
                     e.getMessage(),
@@ -57,7 +57,7 @@ public class AuthController {
             );
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failureResponse);
         } catch (Exception e) {
-            log.error("💥 Unexpected error during login for username {}: {}", loginDto.getUsername(), e.getMessage(), e);
+            log.error("Unexpected error during login for username {}: {}", loginDto.getUsername(), e.getMessage(), e);
             CommonResponseDTO<AuthenticationResponse> errorResponse = new CommonResponseDTO<>(
                     false,
                     "An unexpected error occurred during login",

@@ -10,9 +10,9 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    // ✅ Find user by username (used in authentication)
+    //  Find user by username (used in authentication)
     Optional<User> findByUsername(String username);
 
-    // ✅ Check if a username already exists (useful for registration)
+    //  Check if a username already exists (useful for registration)
     boolean existsByUsername(String username);
 }

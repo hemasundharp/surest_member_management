@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // ✅ Enables logging (via SLF4J + Logback)
+@Slf4j
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
@@ -27,17 +27,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(RoleDTO dto) {
-        log.info("🆕 Creating new role: {}", dto.getName());
+        log.info("Creating new role: {}", dto.getName());
         Role role = roleMapper.toEntity(dto);
         Role savedRole = roleRepository.save(role);
-        log.info("✅ Role created with ID: {}", savedRole.getId());
+        log.info("Role created with ID: {}", savedRole.getId());
         return savedRole;
     }
 
     @Override
     @Cacheable(value = "roles")
     public List<Role> getAllRoles() {
-        log.info("📋 Fetching all roles (may hit database if not cached)");
+        log.info("Fetching all roles (may hit database if not cached)");
         List<Role> roles = roleRepository.findAll();
         log.debug("Fetched {} roles from DB", roles.size());
         return roles;
@@ -46,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(value = "roles", key = "#id")
     public Role getRoleById(UUID id) {
-        log.info("🔍 Fetching role by ID: {} (cacheable)", id);
+        log.info("Fetching role by ID: {} (cacheable)", id);
         return roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
     }
@@ -54,24 +54,24 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @CacheEvict(value = "roles", key = "#id")
     public Role updateById(UUID id, RoleDTO dto) {
-        log.info("✏️ Updating role with ID: {}", id);
+        log.info("Updating role with ID: {}", id);
         Role existingRole = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
 
         existingRole.setName(dto.getName());
         Role updated = roleRepository.save(existingRole);
-        log.info("✅ Role updated successfully: {}", updated.getId());
+        log.info("Role updated successfully: {}", updated.getId());
         return updated;
     }
 
     @Override
     @CacheEvict(value = "roles", allEntries = true)
     public void deleteById(UUID id) {
-        log.warn("🗑️ Deleting role with ID: {}", id);
+        log.warn("Deleting role with ID: {}", id);
         if (!roleRepository.existsById(id)) {
             throw new ResourceNotFoundException("Role not found with id: " + id);
         }
         roleRepository.deleteById(id);
-        log.info("✅ Role deleted successfully and cache evicted for roles");
+        log.info("Role deleted successfully and cache evicted for roles");
     }
 }

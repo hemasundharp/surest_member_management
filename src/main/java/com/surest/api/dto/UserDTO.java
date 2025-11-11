@@ -7,9 +7,9 @@ import java.util.UUID;
 @Data
 public class UserDTO {
     private UUID id;
-    private String userName;
+    private String username;
     private String password;
     private UUID roleId;
-    private String roleName; // 👈 add this line
+    private String roleName;
 }
 

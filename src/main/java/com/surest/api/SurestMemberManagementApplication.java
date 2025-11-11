@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @SpringBootApplication
-@EnableCaching  // Enable caching globally
+@EnableCaching
 public class SurestMemberManagementApplication {
 
 	public static void main(String[] args) {

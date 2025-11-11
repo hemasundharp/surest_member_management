@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-@Slf4j // ✅ Enables SLF4J logging
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthenticationResponse authenticateUser(SignIn loginDto) {
-        log.info("🔐 Attempting authentication for user: {}", loginDto.getUsername());
+        log.info("Attempting authentication for user: {}", loginDto.getUsername());
         try {
             Authentication authentication = authenticationService.authenticateWithCredentials(
                     loginDto.getUsername(), loginDto.getPassword());
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             User user = (User) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(user);
 
-            log.info("✅ Authentication successful for user: {}", user.getUsername());
+            log.info("Authentication successful for user: {}", user.getUsername());
             return new AuthenticationResponse(
                     user.getUsername(),
                     accessToken,
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                     user.getRole()
             );
         } catch (BadCredentialsException e) {
-            log.warn("❌ Authentication failed for username: {}", loginDto.getUsername());
+            log.warn("Authentication failed for username: {}", loginDto.getUsername());
             throw new InvalidLoginException("Invalid username or password!");
         }
     }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = "users", allEntries = true)
     public UserDTO createUser(UserDTO dto) {
-        log.info("🆕 Creating user: {}", dto.getUserName());
+        log.info("Creating user: {}", dto.getUsername());
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(
@@ -74,14 +74,14 @@ public class UserServiceImpl implements UserService {
         );
 
         User savedUser = userRepository.save(user);
-        log.info("✅ User created successfully with ID: {}", savedUser.getId());
+        log.info("User created successfully with ID: {}", savedUser.getId());
         return userMapper.toDto(savedUser);
     }
 
     @Override
     @Cacheable(value = "users")
     public List<UserDTO> getAllUsers() {
-        log.info("📋 Fetching all users (from DB or cache)");
+        log.info("Fetching all users (from DB or cache)");
         List<UserDTO> users = userRepository.findAll()
                 .stream()
                 .map(userMapper::toDto)
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "users", key = "#id")
     public UserDTO getUserById(UUID id) {
-        log.info("🔍 Fetching user by ID: {}", id);
+        log.info("Fetching user by ID: {}", id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
         return userMapper.toDto(user);
@@ -102,11 +102,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = "users", key = "#id")
     public UserDTO updateById(UUID id, UserDTO dto) {
-        log.info("✏️ Updating user with ID: {}", id);
+        log.info("Updating user with ID: {}", id);
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
 
-        existingUser.setUsername(dto.getUserName());
+        existingUser.setUsername(dto.getUsername());
 
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -120,17 +120,17 @@ public class UserServiceImpl implements UserService {
         }
 
         User updatedUser = userRepository.save(existingUser);
-        log.info("✅ User updated successfully: {}", updatedUser.getId());
+        log.info("User updated successfully: {}", updatedUser.getId());
         return userMapper.toDto(updatedUser);
     }
 
     @Override
     @CacheEvict(value = "users", key = "#id")
     public void deleteById(UUID id) {
-        log.warn("🗑️ Deleting user with ID: {}", id);
+        log.warn("Deleting user with ID: {}", id);
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
         userRepository.delete(existingUser);
-        log.info("✅ User deleted successfully");
+        log.info("User deleted successfully");
     }
 }

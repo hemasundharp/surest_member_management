@@ -18,7 +18,7 @@ public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
-    // ✅ DTO → Entity mapping
+    // DTO to Entity mapping
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", expression = "java(mapRole(dto.getRoleId()))")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))")
@@ -26,12 +26,12 @@ public abstract class UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     public abstract User toEntity(UserDTO dto);
 
-    // ✅ Entity → DTO mapping
+    // Entity to DTO mapping
     @Mapping(target = "roleId", source = "role.id")
     @Mapping(target = "password", ignore = true) // never expose password
     public abstract UserDTO toDto(User user);
 
-    // ✅ Helper method for role fetching
+    // Helper method for role fetching
     protected Role mapRole(java.util.UUID roleId) {
         if (roleId == null) return null;
         return roleRepository.findById(roleId)

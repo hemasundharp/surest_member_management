@@ -18,7 +18,7 @@ public class CommonResponseDTO<T> {
     }
 
 
-    // Getters and Setters
+
     public boolean isSuccess() {
         return success;
     }

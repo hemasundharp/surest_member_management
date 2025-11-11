@@ -10,9 +10,9 @@ public interface RoleMapper {
 
     RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
 
-    // DTO → Entity
+    // DTO to Entity
     Role toEntity(RoleDTO dto);
 
-    // Entity → DTO
+    // Entity to DTO
     RoleDTO toDto(Role role);
 }

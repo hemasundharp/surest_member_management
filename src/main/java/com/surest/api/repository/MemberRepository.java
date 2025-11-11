@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, UUID>, JpaSpecificationExecutor<Member> {
 
-    // ✅ Example: find member by email (common lookup)
+    //find member by email (common lookup)
     Optional<Member> findByEmail(String email);
 
-    // ✅ Example: check if email exists (useful for validation)
+    // check if email exists (useful for validation)
     boolean existsByEmail(String email);
 }

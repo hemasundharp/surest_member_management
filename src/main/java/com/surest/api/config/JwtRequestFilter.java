@@ -38,10 +38,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 jwt = authorizationHeader.substring(7);
                 username = jwtTokenUtil.getUsernameFromToken(jwt);
-                log.debug("🔐 JWT token detected for username: {}", username);
+                log.debug("JWT token detected for username: {}", username);
             }
 
-            // Only authenticate if username is found and no auth exists in context
+
             if (username != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null &&
                     jwtTokenUtil.validateToken(jwt, username)) {
@@ -57,15 +57,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                log.info("✅ Authenticated user '{}' with role '{}'", username, role);
+                log.info("Authenticated user '{}' with role '{}'", username, role);
             }
 
             chain.doFilter(request, response);
 
         } catch (Exception ex) {
-            log.error("❌ JWT validation failed: {}", ex.getMessage(), ex);
+            log.error("JWT validation failed: {}", ex.getMessage(), ex);
 
-            // Respond with 401 Unauthorized and JSON error
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"error\":\"Unauthorized: Invalid or expired token\"}");

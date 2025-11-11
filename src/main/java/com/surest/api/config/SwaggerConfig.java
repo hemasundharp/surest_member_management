@@ -27,12 +27,12 @@ public class SwaggerConfig {
     OpenAPI apiInfo() {
         final String securitySchemeName = "bearerAuth";
 
-        // List of servers
+
         List<Server> servers = new ArrayList<>();
         servers.add(new Server().url("http://localhost:" + port).description("Localhost server url"));
 
 
-        // Build the OpenAPI instance with servers and security
+
         return new OpenAPI()
                 .servers(servers)
                 .addSecurityItem(new SecurityRequirement()

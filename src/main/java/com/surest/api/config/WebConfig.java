@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // Allow all origins, you can specify specific origins instead
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false);
@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
         while (iterator.hasNext()) {
             HttpMessageConverter<?> converter = iterator.next();
             if (converter instanceof MappingJackson2XmlHttpMessageConverter) {
-                iterator.remove(); // 🚫 Remove XML converter
+                iterator.remove();
             }
         }
     }

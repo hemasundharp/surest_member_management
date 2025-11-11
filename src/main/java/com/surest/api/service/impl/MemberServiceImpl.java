@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // ✅ Enables logging via SLF4J
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
@@ -30,12 +30,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member createMember(MemberDTO dto) {
-        log.info("🆕 Creating new member: {} {}", dto.getFirstName(), dto.getLastName());
+        log.info("Creating new member: {} {}", dto.getFirstName(), dto.getLastName());
         Member member = memberMapper.toEntity(dto);
         member.setCreatedAt(LocalDateTime.now());
         member.setUpdatedAt(LocalDateTime.now());
         Member saved = memberRepository.save(member);
-        log.info("✅ Member created with ID: {}", saved.getId());
+        log.info("Member created with ID: {}", saved.getId());
         return saved;
     }
 
@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
         Page<Member> memberPage = memberRepository.findAll(pageable);
 
-        log.info("📄 Retrieved {} members (page {} of {})",
+        log.info("Retrieved {} members (page {} of {})",
                 memberPage.getNumberOfElements(), memberPage.getNumber() + 1, memberPage.getTotalPages());
 
         return new MemberPaginatedResponse(
@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Cacheable(value = "members", key = "#id")
     public Member getMemberById(UUID id) {
-        log.info("🔍 Fetching member by ID: {} (cacheable)", id);
+        log.info("Fetching member by ID: {} (cacheable)", id);
         return memberRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Member not found with ID: " + id));
     }
@@ -77,24 +77,24 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @CacheEvict(value = "members", key = "#id")
     public Member updateMemberById(UUID id, MemberDTO dto) {
-        log.info("✏️ Updating member with ID: {}", id);
+        log.info("Updating member with ID: {}", id);
         Member existingMember = memberRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Member not found with ID: " + id));
 
         BeanUtils.copyProperties(dto, existingMember, "memberId", "createdAt");
         existingMember.setUpdatedAt(LocalDateTime.now());
         Member updated = memberRepository.save(existingMember);
-        log.info("✅ Member updated successfully: {}", id);
+        log.info("Member updated successfully: {}", id);
         return updated;
     }
 
     @Override
     @CacheEvict(value = "members", key = "#id")
     public void deleteMemberById(UUID id) {
-        log.warn("🗑️ Deleting member with ID: {}", id);
+        log.warn("Deleting member with ID: {}", id);
         Member existingMember = memberRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Member not found with ID: " + id));
         memberRepository.delete(existingMember);
-        log.info("✅ Member deleted and cache evicted: {}", id);
+        log.info("Member deleted and cache evicted: {}", id);
     }
 }
