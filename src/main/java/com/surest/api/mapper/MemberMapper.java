@@ -12,10 +12,10 @@ public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
     // Map Entity to DTO
-    @Mapping(source = "dateOfBirth", target = "dob")
+   // @Mapping(source = "dateOfBirth", target = "dob")
     MemberDTO toDto(Member member);
 
     // Map DTO to Entity
-    @Mapping(source = "dob", target = "dateOfBirth")
+   // @Mapping(source = "dob", target = "dateOfBirth")
     Member toEntity(MemberDTO dto);
 }

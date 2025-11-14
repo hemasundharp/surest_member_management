@@ -82,4 +82,5 @@ public class RoleController {
         log.info("Role deleted successfully with ID: {}", id);
         return ResponseEntity.ok("Role deleted successfully");
     }
+
 }

@@ -60,9 +60,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/roles/**").permitAll()
                 .requestMatchers("/api/users/**").permitAll()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/create-member").hasAuthority("ADMIN")
-                .requestMatchers("/api/update-member-by-id/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/delete-member-by-id/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/members/create-member").hasAuthority("ADMIN")
+                .requestMatchers("/api/members/update-member-by-id/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/members/delete-member-by-id/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/guest/**").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest().authenticated()
             );

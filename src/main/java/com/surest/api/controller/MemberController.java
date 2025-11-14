@@ -28,7 +28,7 @@ public class MemberController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PostMapping("/create-member")
     public ResponseEntity<Member> createMember(@RequestBody MemberDTO dto) {
         log.info("POST Creating new member: {}", dto.getFirstName());
         Member member = memberService.createMember(dto);
@@ -70,7 +70,7 @@ public class MemberController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("/update-member-by-id/{id}")
     public ResponseEntity<Member> updateMemberById(@PathVariable UUID id, @RequestBody MemberDTO dto) {
         log.info("Updating member with ID: {}", id);
         Member updatedMember = memberService.updateMemberById(id, dto);
@@ -79,7 +79,7 @@ public class MemberController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete-member-by-id/{id}")
     public ResponseEntity<String> deleteMemberById(@PathVariable UUID id) {
         log.warn("Deleting member with ID: {}", id);
         memberService.deleteMemberById(id);
