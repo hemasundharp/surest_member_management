@@ -26,7 +26,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<CommonResponseDTO<AuthenticationResponse>> login(@RequestBody @Valid SignIn loginDto) {
-        log.info("🔐 Login attempt for username: {}", loginDto.getUsername());
+        log.info("Login attempt for username: {}", loginDto.getUsername());
 
         try {
             AuthenticationResponse authenticationResponse = userService.authenticateUser(loginDto);
