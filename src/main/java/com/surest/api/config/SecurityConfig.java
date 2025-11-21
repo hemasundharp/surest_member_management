@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -54,19 +55,19 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                    "/api/account/**", "/api/auth/**",
+                    "/api/account/**", "/api/v1/auth/**",
                     "/api/files/**"
                 ).permitAll()
                 .requestMatchers("/api/roles/**").permitAll()
-                .requestMatchers("/api/users/**").permitAll()
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/members/create-member").hasAuthority("ADMIN")
-                .requestMatchers("/api/members/update-member-by-id/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/members/delete-member-by-id/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/guest/**").hasAnyAuthority("USER", "ADMIN")
-                .anyRequest().authenticated()
+                    .requestMatchers("/api/users/**").permitAll()
+                    .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/v1/members").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/members/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/members/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/v1/members/**").hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers("/api/guest/**").hasAnyAuthority("USER", "ADMIN")
+                    .anyRequest().authenticated()
             );
-
         return http.build();
     }
 }
