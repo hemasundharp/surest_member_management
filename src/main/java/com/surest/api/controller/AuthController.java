@@ -15,7 +15,7 @@ import com.surest.api.service.UserService;
 import com.surest.api.exception.InvalidLoginException;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @AllArgsConstructor
 @Tag(name = "Authentication")
 @CrossOrigin(origins = "*")
