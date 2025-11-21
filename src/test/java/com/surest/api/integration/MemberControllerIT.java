@@ -30,15 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Integration tests for MemberController.
- *
- * Important notes:
- *  - Uses profile "test" so application-test.properties (app.jwt.secret) is used.
- *  - Creates roles named "ADMIN" and "USER" (these strings match your SecurityConfig hasAuthority/hasAnyAuthority checks).
- *  - Generates JWTs using JwtTokenUtil.generateAccessToken(user) after saving the user (so user.id exists).
- *  - Date format for JSON payloads is yyyy-MM-dd (LocalDate).
- */
+
 @ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
