@@ -6,18 +6,22 @@ import com.surest.api.dto.SignIn;
 import com.surest.api.exception.InvalidLoginException;
 import com.surest.api.model.Role;
 import com.surest.api.service.UserService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
 
     @Mock
@@ -32,8 +36,6 @@ class AuthControllerTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.openMocks(this);
-
         role = new Role();
         role.setId(UUID.randomUUID());
         role.setName("ADMIN");
@@ -42,7 +44,7 @@ class AuthControllerTest {
         signIn.setUsername("john");
         signIn.setPassword("pass");
 
-        authResponse = new AuthenticationResponse("john", "jwt-token", UUID.randomUUID(), role);
+        authResponse = new AuthenticationResponse("john", "jwt-token", UUID.randomUUID(), List.of(role.getName()));
     }
 
     @Test
@@ -71,7 +73,8 @@ class AuthControllerTest {
 
     @Test
     void login_invalidCredentials() {
-        when(userService.authenticateUser(signIn)).thenThrow(new InvalidLoginException("Invalid username or password"));
+        when(userService.authenticateUser(signIn))
+                .thenThrow(new InvalidLoginException("Invalid username or password"));
 
         ResponseEntity<CommonResponseDTO<AuthenticationResponse>> response = authController.login(signIn);
 
@@ -83,7 +86,8 @@ class AuthControllerTest {
 
     @Test
     void login_unexpectedException() {
-        when(userService.authenticateUser(signIn)).thenThrow(new RuntimeException("DB error"));
+        when(userService.authenticateUser(signIn))
+                .thenThrow(new RuntimeException("DB error"));
 
         ResponseEntity<CommonResponseDTO<AuthenticationResponse>> response = authController.login(signIn);
 
@@ -96,13 +100,13 @@ class AuthControllerTest {
     @Test
     void login_blankUsername() {
         SignIn invalidSignIn = new SignIn();
-        invalidSignIn.setUsername("  ");
+        invalidSignIn.setUsername("  "); // blank username
         invalidSignIn.setPassword("pass");
 
-        // Validation annotation would normally prevent this, so we simulate controller call
+        when(userService.authenticateUser(invalidSignIn)).thenReturn(null);
+
         ResponseEntity<CommonResponseDTO<AuthenticationResponse>> response = authController.login(invalidSignIn);
 
-        // Since our controller doesn’t validate manually, the null branch is triggered
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertFalse(response.getBody().isSuccess());
     }
@@ -111,10 +115,9 @@ class AuthControllerTest {
     void login_blankPassword() {
         SignIn invalidSignIn = new SignIn();
         invalidSignIn.setUsername("john");
-        invalidSignIn.setPassword("  ");
-
+        invalidSignIn.setPassword("  "); // blank password
+        when(userService.authenticateUser(invalidSignIn)).thenReturn(null);
         ResponseEntity<CommonResponseDTO<AuthenticationResponse>> response = authController.login(invalidSignIn);
-
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertFalse(response.getBody().isSuccess());
     }
