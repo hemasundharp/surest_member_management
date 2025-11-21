@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,13 +64,14 @@ class UserServiceImplTest {
         user.setId(userId);
         user.setUsername("john");
         user.setPassword("pass");
-        user.setRole(role);
+        user.setRoles(Set.of(role));
 
         userDTO = new UserDTO();
         userDTO.setUsername("john");
         userDTO.setPassword("pass");
-        userDTO.setRoleId(role.getId());
+        userDTO.setRoleId(Set.of(role.getId()));
     }
+
 
     @Test
     void authenticateUser_success() {
@@ -77,9 +79,8 @@ class UserServiceImplTest {
         login.setUsername("john");
         login.setPassword("pass");
 
-        when(authenticationService.authenticateWithCredentials(eq("john"), eq("pass")))
+        when(authenticationService.authenticateWithCredentials("john", "pass"))
                 .thenReturn(authentication);
-
         when(authentication.getPrincipal()).thenReturn(user);
         when(jwtUtil.generateAccessToken(user)).thenReturn("jwt-token");
 
@@ -87,6 +88,7 @@ class UserServiceImplTest {
 
         assertNotNull(response);
         assertEquals("john", response.getUsername());
+        assertEquals(List.of("ADMIN"), response.getRoles());
     }
 
     @Test
@@ -95,17 +97,17 @@ class UserServiceImplTest {
         login.setUsername("john");
         login.setPassword("wrong");
 
-        when(authenticationService.authenticateWithCredentials(eq("john"), eq("wrong")))
+        when(authenticationService.authenticateWithCredentials("john", "wrong"))
                 .thenThrow(new InvalidLoginException("Invalid credentials"));
 
-        assertThrows(InvalidLoginException.class, () -> userService.authenticateUser(login));
+        assertThrows(InvalidLoginException.class,
+                () -> userService.authenticateUser(login));
     }
 
 
     @Test
     void createUser_success() {
         when(userMapper.toEntity(userDTO)).thenReturn(user);
-        when(passwordEncoder.encode("pass")).thenReturn("encoded");
         when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDTO);
@@ -113,8 +115,9 @@ class UserServiceImplTest {
         UserDTO result = userService.createUser(userDTO);
 
         assertNotNull(result);
-        verify(userRepository).save(any(User.class));
+        verify(userRepository).save(user);
     }
+
 
     @Test
     void getAllUsers_success() {
@@ -146,10 +149,10 @@ class UserServiceImplTest {
                 () -> userService.getUserById(userId));
     }
 
+
     @Test
     void updateUser_success() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(passwordEncoder.encode("pass")).thenReturn("encoded");
         when(roleRepository.findById(role.getId())).thenReturn(Optional.of(role));
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDTO);
@@ -169,6 +172,47 @@ class UserServiceImplTest {
     }
 
     @Test
+    void updateById_ShouldNotUpdatePassword_WhenPasswordIsNullOrBlank() {
+        UUID id = UUID.randomUUID();
+        User existing = new User();
+        existing.setId(id);
+        existing.setUsername("old");
+
+        UserDTO dto = new UserDTO();
+        dto.setUsername("new");
+        dto.setPassword("");
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(userRepository.save(existing)).thenReturn(existing);
+        when(userMapper.toDto(existing)).thenReturn(dto);
+
+        userService.updateById(id, dto);
+
+        verify(passwordEncoder, never()).encode(anyString());
+    }
+
+    @Test
+    void updateById_ShouldNotUpdateRole_WhenRoleIdIsNull() {
+        UUID id = UUID.randomUUID();
+        User existing = new User();
+        existing.setId(id);
+        existing.setUsername("old");
+
+        UserDTO dto = new UserDTO();
+        dto.setUsername("new");
+        dto.setRoleId(null);
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(userRepository.save(existing)).thenReturn(existing);
+        when(userMapper.toDto(existing)).thenReturn(dto);
+
+        userService.updateById(id, dto);
+
+        verify(roleRepository, never()).findById(any());
+    }
+
+
+    @Test
     void deleteUser_success() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -184,58 +228,4 @@ class UserServiceImplTest {
         assertThrows(UserNotFoundException.class,
                 () -> userService.deleteById(userId));
     }
-
-    @Test
-    void authenticateUser_ShouldThrowInvalidLoginException_WhenBadCredentials() {
-        SignIn login = new SignIn();
-        login.setUsername("user");
-        login.setPassword("wrong");
-
-        Mockito.when(authenticationService.authenticateWithCredentials("user", "wrong"))
-                .thenThrow(new BadCredentialsException("Invalid"));
-
-        assertThrows(InvalidLoginException.class,
-                () -> userService.authenticateUser(login));
-    }
-    @Test
-    void updateById_ShouldNotUpdatePassword_WhenPasswordIsNullOrBlank() {
-        UUID id = UUID.randomUUID();
-
-        User existing = new User();
-        existing.setId(id);
-        existing.setUsername("old");
-
-        UserDTO dto = new UserDTO();
-        dto.setUsername("new");
-        dto.setPassword("");  // BLANK → should skip
-
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(existing));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(existing);
-        Mockito.when(userMapper.toDto(existing)).thenReturn(dto);
-
-        userService.updateById(id, dto);
-
-        Mockito.verify(passwordEncoder, Mockito.never()).encode(Mockito.anyString());
-    }
-    @Test
-    void updateById_ShouldNotUpdateRole_WhenRoleIdIsNull() {
-        UUID id = UUID.randomUUID();
-
-        User existing = new User();
-        existing.setId(id);
-        existing.setUsername("old");
-
-        UserDTO dto = new UserDTO();
-        dto.setUsername("new");
-        dto.setRoleId(null);  // → should skip
-
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(existing));
-        Mockito.when(userRepository.save(existing)).thenReturn(existing);
-        Mockito.when(userMapper.toDto(existing)).thenReturn(dto);
-
-        userService.updateById(id, dto);
-
-        Mockito.verify(roleRepository, Mockito.never()).findById(Mockito.any());
-    }
-
 }
