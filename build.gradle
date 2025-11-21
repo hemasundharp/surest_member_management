@@ -2,8 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
-
-    // ✅ Code coverage
     id 'jacoco'
 }
 
@@ -36,7 +34,7 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     // --- Swagger / OpenAPI ---
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
     // --- Lombok ---
     compileOnly 'org.projectlombok:lombok'
@@ -46,7 +44,7 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
-    // --- Utility Libraries ---
+    // --- Utilities ---
     implementation 'org.json:json:20231013'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.twilio.sdk:twilio:9.2.0'
@@ -56,11 +54,11 @@ dependencies {
     implementation 'org.apache.commons:commons-csv:1.10.0'
     implementation 'org.apache.commons:commons-collections4:4.4'
 
-    // --- Logging
+    // --- Logging ---
     implementation 'org.slf4j:slf4j-api:2.0.9'
     implementation 'ch.qos.logback:logback-classic:1.4.11'
 
-    // --- Testing
+    // --- Testing ---
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -70,36 +68,42 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport //Generate JaCoCo report after tests
-}
-
+// --- Jacoco Config ---
 jacoco {
     toolVersion = "0.8.10"
 }
 
+// --- Enable JUnit Platform ---
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+// --- Jacoco Report for Unit Tests Only ---
 jacocoTestReport {
     dependsOn test
     reports {
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml/unit')
         xml.required = true
         csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 
+    // include only relevant packages
     afterEvaluate {
         classDirectories.setFrom(
-                files(classDirectories.files.collect { fileTree(dir: it, exclude: [
-                        'com/surest/api/config/**',
-                        'com/surest/api/dto/**',
-                        'com/surest/api/exception/**',
-                        'com/surest/api/model/**',
-                        'com/surest/api/mapper/**'
-                        ])})
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, include: [
+                            'com/surest/api/service/**',
+                            'com/surest/api/service/impl/**',
+                            'com/surest/api/config/**',
+                            'com/surest/api/controller/**'
+                    ])
+                })
         )
     }
 }
 
+// --- BootJar Configuration ---
 bootJar {
     archiveFileName = 'surest.jar'
 }
