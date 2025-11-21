@@ -9,6 +9,13 @@ import com.surest.api.model.Role;
 import com.surest.api.model.User;
 import com.surest.api.repository.RoleRepository;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+
+
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class UserMapper {
 
@@ -20,21 +27,29 @@ public abstract class UserMapper {
 
     // DTO to Entity mapping
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "role", expression = "java(mapRole(dto.getRoleId()))")
+    @Mapping(target = "roles", expression = "java(mapRoles(dto.getRoleId()))")
     @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "version", ignore = true)
     public abstract User toEntity(UserDTO dto);
 
     // Entity to DTO mapping
-    @Mapping(target = "roleId", source = "role.id")
-    @Mapping(target = "password", ignore = true) // never expose password
+    @Mapping(target = "roleId", expression = "java(user.getRoles() != null ? user.getRoles().stream().map(r -> r.getId()).collect(java.util.stream.Collectors.toSet()) : null)")
+    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "roleName", ignore = true)
     public abstract UserDTO toDto(User user);
 
+
     // Helper method for role fetching
-    protected Role mapRole(java.util.UUID roleId) {
-        if (roleId == null) return null;
-        return roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId));
+    protected Set<Role> mapRoles(Set<UUID> roleIds) {
+        if (roleIds == null || roleIds.isEmpty()) return Collections.emptySet();
+
+        return roleIds.stream()
+                .map(id -> roleRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + id)))
+                .collect(Collectors.toSet());
     }
+
+
 }
