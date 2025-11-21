@@ -2,6 +2,7 @@ package com.surest.api.controller;
 
 import java.util.UUID;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.surest.api.dto.MemberDTO;
 import com.surest.api.dto.MemberPaginatedResponse;
-import com.surest.api.model.Member;
 import com.surest.api.service.MemberService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/api/v1/members")
 @Tag(name = "Member Management", description = "APIs for managing members")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -26,18 +26,15 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create-member")
-    public ResponseEntity<Member> createMember(@RequestBody MemberDTO dto) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping
+    public ResponseEntity<MemberDTO> createMember(@RequestBody @Valid MemberDTO dto) {
         log.info("POST Creating new member: {}", dto.getFirstName());
-        Member member = memberService.createMember(dto);
-        log.info("Member created successfully with ID: {}", member.getId());
+        MemberDTO member = memberService.createMember(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
     }
 
-
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<MemberPaginatedResponse> getAllMembers(
             @RequestParam(defaultValue = "0") int page,
@@ -45,45 +42,28 @@ public class MemberController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
 
-        log.info("Fetching all members | page={}, size={}, sortBy={}, sortDir={}",
-                page, size, sortBy, sortDir);
-
         MemberPaginatedResponse members = memberService.getAllMembers(page, size, sortBy, sortDir);
-
-        if (members != null && members.getData() != null) {
-            log.info("Retrieved {} members (totalPages={})", members.getData().size(), members.getTotalPages());
-        } else {
-            log.warn("No members found or response is null");
-        }
         return ResponseEntity.ok(members);
     }
 
-
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable UUID id) {
-        log.info("Fetching member with ID: {}", id);
-        Member member = memberService.getMemberById(id);
-        log.info("Member found: {} {}", member.getFirstName(), member.getLastName());
+    public ResponseEntity<MemberDTO> getMemberById(@PathVariable UUID id) {
+        MemberDTO member = memberService.getMemberById(id);
         return ResponseEntity.ok(member);
     }
 
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/update-member-by-id/{id}")
-    public ResponseEntity<Member> updateMemberById(@PathVariable UUID id, @RequestBody MemberDTO dto) {
-        log.info("Updating member with ID: {}", id);
-        Member updatedMember = memberService.updateMemberById(id, dto);
-        log.info("Member updated successfully: {}", updatedMember.getId());
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberDTO> updateMemberById(@PathVariable UUID id, @RequestBody @Valid MemberDTO dto) {
+        MemberDTO updatedMember = memberService.updateMemberById(id, dto);
         return ResponseEntity.ok(updatedMember);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete-member-by-id/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMemberById(@PathVariable UUID id) {
-        log.warn("Deleting member with ID: {}", id);
         memberService.deleteMemberById(id);
-        log.info("Member deleted successfully with ID: {}", id);
         return ResponseEntity.ok("Member deleted successfully");
     }
 }
