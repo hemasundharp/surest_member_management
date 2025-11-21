@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.surest.api.config.JwtTokenUtil;
 import com.surest.api.dto.AuthenticationResponse;
@@ -24,6 +25,7 @@ import com.surest.api.model.User;
 import com.surest.api.repository.RoleRepository;
 import com.surest.api.repository.UserRepository;
 import com.surest.api.service.AuthenticationService;
+import com.surest.api.service.UserService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserService implements com.surest.api.service.UserService {
+@Transactional
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -41,6 +44,7 @@ public class UserService implements com.surest.api.service.UserService {
     private final AuthenticationService authenticationService;
 
     @Override
+    @Transactional(readOnly = true)
     public AuthenticationResponse authenticateUser(SignIn loginDto) {
         log.info("Attempting authentication for user: {}", loginDto.getUsername());
         try {
@@ -67,10 +71,13 @@ public class UserService implements com.surest.api.service.UserService {
 
     @Override
     @CacheEvict(value = "users", allEntries = true)
+    @Transactional
     public UserDTO createUser(UserDTO dto) {
         log.info("Creating user: {}", dto.getUsername());
+
         User user = userMapper.toEntity(dto);
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+
         Set<Role> roles = dto.getRoleId().stream()
                 .map(roleId -> roleRepository.findById(roleId)
                         .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId)))
@@ -85,6 +92,7 @@ public class UserService implements com.surest.api.service.UserService {
 
     @Override
     @Cacheable(value = "users")
+    @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
         log.info("Fetching all users (from DB or cache)");
         List<UserDTO> users = userRepository.findAll()
@@ -97,6 +105,7 @@ public class UserService implements com.surest.api.service.UserService {
 
     @Override
     @Cacheable(value = "users", key = "#id")
+    @Transactional(readOnly = true)
     public UserDTO getUserById(UUID id) {
         log.info("Fetching user by ID: {}", id);
         User user = userRepository.findById(id)
@@ -106,8 +115,10 @@ public class UserService implements com.surest.api.service.UserService {
 
     @Override
     @CacheEvict(value = "users", key = "#id")
+    @Transactional
     public UserDTO updateById(UUID id, UserDTO dto) {
         log.info("Updating user with ID: {}", id);
+
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
 
@@ -132,11 +143,15 @@ public class UserService implements com.surest.api.service.UserService {
 
     @Override
     @CacheEvict(value = "users", key = "#id")
+    @Transactional
     public void deleteById(UUID id) {
         log.warn("Deleting user with ID: {}", id);
+
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+
         userRepository.delete(existingUser);
+
         log.info("User deleted successfully");
     }
 }
