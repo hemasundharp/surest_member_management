@@ -1,11 +1,12 @@
 package com.surest.api.dto;
 
-import com.surest.api.model.Role;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,5 +16,5 @@ public class AuthenticationResponse {
 	private String username;
     private String token;
     private UUID userId;
-    private Role role;
+    private List<String> roles;
 }
