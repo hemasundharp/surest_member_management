@@ -5,16 +5,25 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Data
 @Table(name = "member")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "first_name", nullable = false, length = 100)
@@ -34,4 +43,7 @@ public class Member {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
 }
