@@ -5,7 +5,6 @@ import com.surest.api.exception.ResourceNotFoundException;
 import com.surest.api.mapper.RoleMapper;
 import com.surest.api.model.Role;
 import com.surest.api.repository.RoleRepository;
-import com.surest.api.service.RoleService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoleServiceImpl implements RoleService {
+public class RoleService implements com.surest.api.service.RoleService {
 
     private final RoleMapper roleMapper;
     private final RoleRepository roleRepository;

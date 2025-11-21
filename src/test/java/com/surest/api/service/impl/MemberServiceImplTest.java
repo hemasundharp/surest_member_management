@@ -19,7 +19,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class MemberServiceImplTest {
+class MemberServiceTest {
 
     @Mock
     private MemberMapper memberMapper;
@@ -28,7 +28,7 @@ class MemberServiceImplTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private MemberServiceImpl memberService;
+    private MemberService memberService;
 
     private Member member;
     private MemberDTO memberDTO;
@@ -155,7 +155,7 @@ class MemberServiceImplTest {
 
     @Test
     void isSortableField_validFields() throws Exception {
-        var method = MemberServiceImpl.class.getDeclaredMethod("isSortableField", String.class);
+        var method = MemberService.class.getDeclaredMethod("isSortableField", String.class);
         method.setAccessible(true);
 
         assertTrue((boolean) method.invoke(memberService, "firstName"));
@@ -167,7 +167,7 @@ class MemberServiceImplTest {
 
     @Test
     void isSortableField_invalidField() throws Exception {
-        var method = MemberServiceImpl.class.getDeclaredMethod("isSortableField", String.class);
+        var method = MemberService.class.getDeclaredMethod("isSortableField", String.class);
         method.setAccessible(true);
 
         assertFalse((boolean) method.invoke(memberService, "randomField"));

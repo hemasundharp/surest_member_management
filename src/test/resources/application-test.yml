@@ -1,0 +1,17 @@
+spring:
+datasource:
+url: jdbc:postgresql://localhost:5432/member_db_test
+username: postgres
+password: sundharp
+jpa:
+hibernate:
+ddl-auto: create-drop
+properties:
+hibernate:
+dialect: org.hibernate.dialect.PostgreSQLDialect
+flyway:
+enabled: false
+
+app:
+jwt:
+secret: TestJwtKeyForHMACSHA256_1234567890abcdefghijklmnopqrst

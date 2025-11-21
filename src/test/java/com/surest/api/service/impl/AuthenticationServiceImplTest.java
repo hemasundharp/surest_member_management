@@ -1,6 +1,5 @@
 package com.surest.api.service.impl;
 
-import com.surest.api.service.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -12,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AuthenticationServiceImplTest {
+class AuthenticationServiceTest {
 
     @Mock
     private AuthenticationManager authenticationManager;
 
     @InjectMocks
-    private AuthenticationServiceImpl authenticationService;
+    private AuthenticationService authenticationService;
 
     @Mock
     private Authentication authentication;

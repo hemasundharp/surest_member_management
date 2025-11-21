@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RoleServiceImplTest {
+public class RoleServiceTest {
 
     @Mock
     private RoleMapper roleMapper;
@@ -30,7 +30,7 @@ public class RoleServiceImplTest {
     private RoleRepository roleRepository;
 
     @InjectMocks
-    private RoleServiceImpl roleServiceImpl;
+    private RoleService roleService;
 
     @Test
     void createRole_success() {
@@ -44,7 +44,7 @@ public class RoleServiceImplTest {
         when(roleMapper.toEntity(dto)).thenReturn(role);
         when(roleRepository.save(role)).thenReturn(role);
 
-        Role result = roleServiceImpl.createRole(dto);
+        Role result = roleService.createRole(dto);
 
         assertNotNull(result);
         verify(roleMapper).toEntity(dto);
@@ -58,7 +58,7 @@ public class RoleServiceImplTest {
 
         when(roleRepository.findAll()).thenReturn(list);
 
-        List<Role> result = roleServiceImpl.getAllRoles();
+        List<Role> result = roleService.getAllRoles();
 
         assertEquals(1, result.size());
         verify(roleRepository).findAll();
@@ -72,7 +72,7 @@ public class RoleServiceImplTest {
 
         when(roleRepository.findById(id)).thenReturn(Optional.of(role));
 
-        Role result = roleServiceImpl.getRoleById(id);
+        Role result = roleService.getRoleById(id);
 
         assertNotNull(result);
         verify(roleRepository).findById(id);
@@ -85,7 +85,7 @@ public class RoleServiceImplTest {
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleServiceImpl.getRoleById(id));
+                () -> roleService.getRoleById(id));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class RoleServiceImplTest {
         when(roleRepository.findById(id)).thenReturn(Optional.of(existing));
         when(roleRepository.save(existing)).thenReturn(existing);
 
-        Role result = roleServiceImpl.updateById(id, dto);
+        Role result = roleService.updateById(id, dto);
 
         assertNotNull(result);
         verify(roleRepository).save(existing);
@@ -116,7 +116,7 @@ public class RoleServiceImplTest {
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleServiceImpl.updateById(id, dto));
+                () -> roleService.updateById(id, dto));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class RoleServiceImplTest {
 
         when(roleRepository.existsById(id)).thenReturn(true);
 
-        roleServiceImpl.deleteById(id);
+        roleService.deleteById(id);
 
         verify(roleRepository).deleteById(id);
     }
@@ -137,6 +137,6 @@ public class RoleServiceImplTest {
         when(roleRepository.existsById(id)).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleServiceImpl.deleteById(id));
+                () -> roleService.deleteById(id));
     }
 }

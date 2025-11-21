@@ -15,7 +15,6 @@ import com.surest.api.exception.UserNotFoundException;
 import com.surest.api.mapper.MemberMapper;
 import com.surest.api.model.Member;
 import com.surest.api.repository.MemberRepository;
-import com.surest.api.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberServiceImpl implements MemberService {
+public class MemberService implements com.surest.api.service.MemberService {
 
     private final MemberMapper memberMapper;
     private final MemberRepository memberRepository;

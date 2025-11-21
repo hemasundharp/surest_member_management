@@ -1,9 +1,11 @@
 package com.surest.api.service.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.surest.api.model.Role;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +24,6 @@ import com.surest.api.model.User;
 import com.surest.api.repository.RoleRepository;
 import com.surest.api.repository.UserRepository;
 import com.surest.api.service.AuthenticationService;
-import com.surest.api.service.UserService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserService implements com.surest.api.service.UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -54,7 +55,9 @@ public class UserServiceImpl implements UserService {
                     user.getUsername(),
                     accessToken,
                     user.getId(),
-                    user.getRole()
+                    user.getRoles().stream()
+                            .map(role -> role.getName().toUpperCase())
+                            .collect(Collectors.toList())
             );
         } catch (BadCredentialsException e) {
             log.warn("Authentication failed for username: {}", loginDto.getUsername());
@@ -68,10 +71,12 @@ public class UserServiceImpl implements UserService {
         log.info("Creating user: {}", dto.getUsername());
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRole(
-                roleRepository.findById(dto.getRoleId())
-                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + dto.getRoleId()))
-        );
+        Set<Role> roles = dto.getRoleId().stream()
+                .map(roleId -> roleRepository.findById(roleId)
+                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId)))
+                .collect(Collectors.toSet());
+
+        user.setRoles(roles);
 
         User savedUser = userRepository.save(user);
         log.info("User created successfully with ID: {}", savedUser.getId());
@@ -112,11 +117,12 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
-        if (dto.getRoleId() != null) {
-            existingUser.setRole(
-                    roleRepository.findById(dto.getRoleId())
-                            .orElseThrow(() -> new RuntimeException("Role not found with ID: " + dto.getRoleId()))
-            );
+        if (dto.getRoleId() != null && !dto.getRoleId().isEmpty()) {
+            Set<Role> roles = dto.getRoleId().stream()
+                    .map(roleId -> roleRepository.findById(roleId)
+                            .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId)))
+                    .collect(Collectors.toSet());
+            existingUser.setRoles(roles);
         }
 
         User updatedUser = userRepository.save(existingUser);
