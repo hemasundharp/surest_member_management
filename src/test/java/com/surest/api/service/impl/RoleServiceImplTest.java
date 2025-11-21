@@ -5,12 +5,12 @@ import com.surest.api.exception.ResourceNotFoundException;
 import com.surest.api.mapper.RoleMapper;
 import com.surest.api.model.Role;
 import com.surest.api.repository.RoleRepository;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
-
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RoleServiceTest {
+public class RoleServiceImplTest {
 
     @Mock
     private RoleMapper roleMapper;
@@ -30,7 +30,7 @@ public class RoleServiceTest {
     private RoleRepository roleRepository;
 
     @InjectMocks
-    private RoleService roleService;
+    private RoleServiceImpl roleServiceImpl;
 
     @Test
     void createRole_success() {
@@ -43,12 +43,28 @@ public class RoleServiceTest {
 
         when(roleMapper.toEntity(dto)).thenReturn(role);
         when(roleRepository.save(role)).thenReturn(role);
+        when(roleRepository.findByName("Admin")).thenReturn(Optional.empty());
 
-        Role result = roleService.createRole(dto);
+        Role result = roleServiceImpl.createRole(dto);
 
         assertNotNull(result);
         verify(roleMapper).toEntity(dto);
         verify(roleRepository).save(role);
+    }
+
+    @Test
+    void createRole_nameAlreadyExists_throwsException() {
+        RoleDTO dto = new RoleDTO();
+        dto.setName("Admin");
+
+        Role existing = new Role();
+        existing.setName("Admin");
+
+        when(roleRepository.findByName("Admin")).thenReturn(Optional.of(existing));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> roleServiceImpl.createRole(dto));
+        assertEquals("Role name already exists: Admin", ex.getMessage());
     }
 
     @Test
@@ -58,7 +74,7 @@ public class RoleServiceTest {
 
         when(roleRepository.findAll()).thenReturn(list);
 
-        List<Role> result = roleService.getAllRoles();
+        List<Role> result = roleServiceImpl.getAllRoles();
 
         assertEquals(1, result.size());
         verify(roleRepository).findAll();
@@ -72,7 +88,7 @@ public class RoleServiceTest {
 
         when(roleRepository.findById(id)).thenReturn(Optional.of(role));
 
-        Role result = roleService.getRoleById(id);
+        Role result = roleServiceImpl.getRoleById(id);
 
         assertNotNull(result);
         verify(roleRepository).findById(id);
@@ -85,7 +101,7 @@ public class RoleServiceTest {
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleService.getRoleById(id));
+                () -> roleServiceImpl.getRoleById(id));
     }
 
     @Test
@@ -99,9 +115,10 @@ public class RoleServiceTest {
         existing.setName("Old");
 
         when(roleRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(roleRepository.findByName("Updated")).thenReturn(Optional.empty());
         when(roleRepository.save(existing)).thenReturn(existing);
 
-        Role result = roleService.updateById(id, dto);
+        Role result = roleServiceImpl.updateById(id, dto);
 
         assertNotNull(result);
         verify(roleRepository).save(existing);
@@ -116,7 +133,31 @@ public class RoleServiceTest {
         when(roleRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleService.updateById(id, dto));
+                () -> roleServiceImpl.updateById(id, dto));
+    }
+
+    @Test
+    void updateRoleById_nameAlreadyExistsForAnotherId_throwsException() {
+        UUID id = UUID.randomUUID();
+        UUID otherId = UUID.randomUUID();
+
+        RoleDTO dto = new RoleDTO();
+        dto.setName("Admin");
+
+        Role existing = new Role();
+        existing.setId(id);
+        existing.setName("Old");
+
+        Role another = new Role();
+        another.setId(otherId);
+        another.setName("Admin");
+
+        when(roleRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(roleRepository.findByName("Admin")).thenReturn(Optional.of(another));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> roleServiceImpl.updateById(id, dto));
+        assertEquals("Role name already exists: Admin", ex.getMessage());
     }
 
     @Test
@@ -125,7 +166,7 @@ public class RoleServiceTest {
 
         when(roleRepository.existsById(id)).thenReturn(true);
 
-        roleService.deleteById(id);
+        roleServiceImpl.deleteById(id);
 
         verify(roleRepository).deleteById(id);
     }
@@ -137,6 +178,6 @@ public class RoleServiceTest {
         when(roleRepository.existsById(id)).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class,
-                () -> roleService.deleteById(id));
+                () -> roleServiceImpl.deleteById(id));
     }
 }
