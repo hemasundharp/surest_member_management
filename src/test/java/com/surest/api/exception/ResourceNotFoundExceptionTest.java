@@ -10,7 +10,6 @@ class ResourceNotFoundExceptionTest {
     void constructor_shouldSetMessage() {
         String errorMessage = "Resource not found";
         ResourceNotFoundException exception = new ResourceNotFoundException(errorMessage);
-
         assertNotNull(exception);
         assertEquals(errorMessage, exception.getMessage());
         assertTrue(exception instanceof RuntimeException);
