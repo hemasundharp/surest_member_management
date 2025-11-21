@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberPaginatedResponse {
 
-	private List<Member> data;
+	private List<MemberDTO> data;
     private long totalElements;
     private int totalPages;
     private int currentPage;
