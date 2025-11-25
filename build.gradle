@@ -1,0 +1,109 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'jacoco'
+}
+
+group = 'com.surest'
+version = '0.0.1-SNAPSHOT'
+description = 'Surest API'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // --- Spring Boot Starters ---
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // --- Database ---
+    runtimeOnly 'org.postgresql:postgresql:42.7.3'
+    implementation 'org.flywaydb:flyway-core:10.14.0'
+    implementation 'org.flywaydb:flyway-database-postgresql:10.14.0'
+
+    // --- JWT ---
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // --- Swagger / OpenAPI ---
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+    // --- Lombok ---
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // --- MapStruct ---
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // --- Utilities ---
+    implementation 'org.json:json:20231013'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.twilio.sdk:twilio:9.2.0'
+    implementation 'com.azure:azure-storage-blob:12.25.0'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.30'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+    implementation 'org.apache.commons:commons-csv:1.10.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    // --- Logging ---
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+
+    // --- Testing ---
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+// --- Jacoco Config ---
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+// --- Enable JUnit Platform ---
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+// --- Jacoco Report for Unit Tests Only ---
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml/unit')
+        xml.required = true
+        csv.required = false
+    }
+
+    // include only relevant packages
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, include: [
+                            'com/surest/api/service/**',
+                            'com/surest/api/service/impl/**',
+                            'com/surest/api/config/**',
+                            'com/surest/api/controller/**'
+                    ])
+                })
+        )
+    }
+}
+
+// --- BootJar Configuration ---
+bootJar {
+    archiveFileName = 'surest.jar'
+}

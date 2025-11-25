@@ -1,0 +1,30 @@
+app:
+  jwt:
+    secret: TestJwtKeyForHMACSHA256_1234567890abcdefghijklmnopqrst
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+server:
+  port: 8989
+spring:
+  datasource:
+    password: sundharp
+    url: jdbc:postgresql://localhost:5432/member_db
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+  cache:
+    type: simple

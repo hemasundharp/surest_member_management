@@ -1,0 +1,546 @@
+Folder PATH listing for volume Windows
+Volume serial number is 5872-4063
+C:.
+|   .gitattributes
+|   .gitignore
+|   build.gradle
+|   gradlew
+|   gradlew.bat
+|   HELP.md
+|   README.md
+|   settings.gradle
+|   structure.txt
+|   
++---.gradle
+|   |   file-system.probe
+|   |   
+|   +---8.14.3
+|   |   |   gc.properties
+|   |   |   
+|   |   +---checksums
+|   |   |       checksums.lock
+|   |   |       md5-checksums.bin
+|   |   |       sha1-checksums.bin
+|   |   |       
+|   |   +---executionHistory
+|   |   |       executionHistory.bin
+|   |   |       executionHistory.lock
+|   |   |       
+|   |   +---expanded
+|   |   |       expanded.lock
+|   |   |       
+|   |   +---fileChanges
+|   |   |       last-build.bin
+|   |   |       
+|   |   +---fileHashes
+|   |   |       fileHashes.bin
+|   |   |       fileHashes.lock
+|   |   |       resourceHashesCache.bin
+|   |   |       
+|   |   \---vcsMetadata
+|   +---buildOutputCleanup
+|   |       buildOutputCleanup.lock
+|   |       cache.properties
+|   |       outputFiles.bin
+|   |       
+|   \---vcs-1
+|           gc.properties
+|           
++---.idea
+|   |   .gitignore
+|   |   .name
+|   |   compiler.xml
+|   |   gradle.xml
+|   |   misc.xml
+|   |   modules.xml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   \---modules
+|           api.main.iml
+|           
++---build
+|   |   resolvedMainClassName
+|   |   
+|   +---classes
+|   |   \---java
+|   |       +---main
+|   |       |   \---com
+|   |       |       \---surest
+|   |       |           \---api
+|   |       |               |   SurestMemberManagementApplication.class
+|   |       |               |   
+|   |       |               +---config
+|   |       |               |       AppConfig.class
+|   |       |               |       DelegatedAuthenticationEntryPoint.class
+|   |       |               |       JwtRequestFilter.class
+|   |       |               |       JwtTokenUtil.class
+|   |       |               |       SecurityConfig.class
+|   |       |               |       SwaggerConfig.class
+|   |       |               |       WebConfig.class
+|   |       |               |       
+|   |       |               +---controller
+|   |       |               |       AuthController.class
+|   |       |               |       MemberController.class
+|   |       |               |       RoleController.class
+|   |       |               |       UserController.class
+|   |       |               |       
+|   |       |               +---dto
+|   |       |               |       AuthenticationResponse.class
+|   |       |               |       CommonResponseDTO.class
+|   |       |               |       MemberDTO.class
+|   |       |               |       MemberPaginatedResponse.class
+|   |       |               |       RoleDTO.class
+|   |       |               |       SignIn.class
+|   |       |               |       UserDTO.class
+|   |       |               |       
+|   |       |               +---exception
+|   |       |               |       AccessDeniedException.class
+|   |       |               |       DefaultExceptionHandler.class
+|   |       |               |       InvalidLoginException.class
+|   |       |               |       ResourceNotFoundException.class
+|   |       |               |       RestError.class
+|   |       |               |       UserNotFoundException.class
+|   |       |               |       
+|   |       |               +---mapper
+|   |       |               |       MemberMapper.class
+|   |       |               |       MemberMapperImpl.class
+|   |       |               |       RoleMapper.class
+|   |       |               |       RoleMapperImpl.class
+|   |       |               |       UserMapper.class
+|   |       |               |       UserMapperImpl.class
+|   |       |               |       
+|   |       |               +---model
+|   |       |               |       Member$MemberBuilder.class
+|   |       |               |       Member.class
+|   |       |               |       Role$RoleBuilder.class
+|   |       |               |       Role.class
+|   |       |               |       User$UserBuilder.class
+|   |       |               |       User.class
+|   |       |               |       
+|   |       |               +---repository
+|   |       |               |       MemberRepository.class
+|   |       |               |       RoleRepository.class
+|   |       |               |       UserRepository.class
+|   |       |               |       
+|   |       |               \---service
+|   |       |                   |   AuthenticationService.class
+|   |       |                   |   MemberService.class
+|   |       |                   |   RoleService.class
+|   |       |                   |   SurestUserDetailsService.class
+|   |       |                   |   UserService.class
+|   |       |                   |   
+|   |       |                   \---impl
+|   |       |                           AuthenticationServiceImpl.class
+|   |       |                           MemberServiceImpl.class
+|   |       |                           RoleServiceImpl.class
+|   |       |                           UserServiceImpl.class
+|   |       |                           
+|   |       \---test
+|   |           \---com
+|   |               \---surest
+|   |                   \---api
+|   |                       +---config
+|   |                       |       DelegatedAuthenticationEntryPointTest.class
+|   |                       |       JwtRequestFilterTest.class
+|   |                       |       JwtTokenUtilTest$1.class
+|   |                       |       JwtTokenUtilTest.class
+|   |                       |       WebConfigTest.class
+|   |                       |       
+|   |                       +---controller
+|   |                       |       AuthControllerTest.class
+|   |                       |       MemberControllerTest.class
+|   |                       |       RoleControllerTest.class
+|   |                       |       UserControllerTest.class
+|   |                       |       
+|   |                       +---exception
+|   |                       |       AccessDeniedExceptionTest.class
+|   |                       |       DefaultExceptionHandlerTest.class
+|   |                       |       InvalidLoginExceptionTest.class
+|   |                       |       ResourceNotFoundExceptionTest.class
+|   |                       |       RestErrorTest.class
+|   |                       |       UserNotFoundExceptionTest.class
+|   |                       |       
+|   |                       +---integration
+|   |                       |       MemberControllerIntegrationTest.class
+|   |                       |       
+|   |                       +---mapper
+|   |                       |       UserMapperTest.class
+|   |                       |       
+|   |                       \---service
+|   |                           |   SurestUserDetailsServiceTest.class
+|   |                           |   
+|   |                           \---impl
+|   |                                   AuthenticationServiceImplTest.class
+|   |                                   MemberServiceImplTest.class
+|   |                                   RoleServiceImplTest.class
+|   |                                   UserServiceImplTest.class
+|   |                                   
+|   +---generated
+|   |   \---sources
+|   |       +---annotationProcessor
+|   |       |   \---java
+|   |       |       +---main
+|   |       |       |   \---com
+|   |       |       |       \---surest
+|   |       |       |           \---api
+|   |       |       |               \---mapper
+|   |       |       |                       MemberMapperImpl.java
+|   |       |       |                       RoleMapperImpl.java
+|   |       |       |                       UserMapperImpl.java
+|   |       |       |                       
+|   |       |       \---test
+|   |       \---headers
+|   |           \---java
+|   |               +---main
+|   |               \---test
+|   +---jacoco
+|   |       test.exec
+|   |       
+|   +---jacocoHtml
+|   |   |   index.html
+|   |   |   jacoco-sessions.html
+|   |   |   
+|   |   +---com.surest.api
+|   |   |       index.html
+|   |   |       index.source.html
+|   |   |       SurestMemberManagementApplication.html
+|   |   |       SurestMemberManagementApplication.java.html
+|   |   |       
+|   |   +---com.surest.api.config
+|   |   |       AppConfig.html
+|   |   |       AppConfig.java.html
+|   |   |       DelegatedAuthenticationEntryPoint.html
+|   |   |       DelegatedAuthenticationEntryPoint.java.html
+|   |   |       index.html
+|   |   |       index.source.html
+|   |   |       JwtRequestFilter.html
+|   |   |       JwtRequestFilter.java.html
+|   |   |       JwtTokenUtil.html
+|   |   |       JwtTokenUtil.java.html
+|   |   |       SecurityConfig.html
+|   |   |       SecurityConfig.java.html
+|   |   |       SwaggerConfig.html
+|   |   |       SwaggerConfig.java.html
+|   |   |       WebConfig.html
+|   |   |       WebConfig.java.html
+|   |   |       
+|   |   +---com.surest.api.controller
+|   |   |       AuthController.html
+|   |   |       AuthController.java.html
+|   |   |       index.html
+|   |   |       index.source.html
+|   |   |       MemberController.html
+|   |   |       MemberController.java.html
+|   |   |       RoleController.html
+|   |   |       RoleController.java.html
+|   |   |       UserController.html
+|   |   |       UserController.java.html
+|   |   |       
+|   |   +---com.surest.api.service
+|   |   |       index.html
+|   |   |       index.source.html
+|   |   |       SurestUserDetailsService.html
+|   |   |       SurestUserDetailsService.java.html
+|   |   |       
+|   |   +---com.surest.api.service.impl
+|   |   |       AuthenticationServiceImpl.html
+|   |   |       AuthenticationServiceImpl.java.html
+|   |   |       index.html
+|   |   |       index.source.html
+|   |   |       MemberServiceImpl.html
+|   |   |       MemberServiceImpl.java.html
+|   |   |       RoleServiceImpl.html
+|   |   |       RoleServiceImpl.java.html
+|   |   |       UserServiceImpl.html
+|   |   |       UserServiceImpl.java.html
+|   |   |       
+|   |   \---jacoco-resources
+|   |           branchfc.gif
+|   |           branchnc.gif
+|   |           branchpc.gif
+|   |           bundle.gif
+|   |           class.gif
+|   |           down.gif
+|   |           greenbar.gif
+|   |           group.gif
+|   |           method.gif
+|   |           package.gif
+|   |           prettify.css
+|   |           prettify.js
+|   |           redbar.gif
+|   |           report.css
+|   |           report.gif
+|   |           session.gif
+|   |           sort.gif
+|   |           sort.js
+|   |           source.gif
+|   |           up.gif
+|   |           
+|   +---libs
+|   |       surest.jar
+|   |       
+|   +---reports
+|   |   +---jacoco
+|   |   |   \---test
+|   |   |           jacocoTestReport.xml
+|   |   |           
+|   |   +---problems
+|   |   |       problems-report.html
+|   |   |       
+|   |   \---tests
+|   |       \---test
+|   |           |   index.html
+|   |           |   
+|   |           +---classes
+|   |           |       com.surest.api.config.DelegatedAuthenticationEntryPointTest.html
+|   |           |       com.surest.api.config.JwtRequestFilterTest.html
+|   |           |       com.surest.api.config.JwtTokenUtilTest.html
+|   |           |       com.surest.api.config.WebConfigTest.html
+|   |           |       com.surest.api.controller.AuthControllerTest.html
+|   |           |       com.surest.api.controller.MemberControllerTest.html
+|   |           |       com.surest.api.controller.RoleControllerTest.html
+|   |           |       com.surest.api.controller.UserControllerTest.html
+|   |           |       com.surest.api.exception.AccessDeniedExceptionTest.html
+|   |           |       com.surest.api.exception.DefaultExceptionHandlerTest.html
+|   |           |       com.surest.api.exception.InvalidLoginExceptionTest.html
+|   |           |       com.surest.api.exception.ResourceNotFoundExceptionTest.html
+|   |           |       com.surest.api.exception.RestErrorTest.html
+|   |           |       com.surest.api.exception.UserNotFoundExceptionTest.html
+|   |           |       com.surest.api.integration.MemberControllerIntegrationTest.html
+|   |           |       com.surest.api.mapper.UserMapperTest.html
+|   |           |       com.surest.api.service.impl.AuthenticationServiceImplTest.html
+|   |           |       com.surest.api.service.impl.MemberServiceImplTest.html
+|   |           |       com.surest.api.service.impl.RoleServiceImplTest.html
+|   |           |       com.surest.api.service.impl.UserServiceImplTest.html
+|   |           |       com.surest.api.service.SurestUserDetailsServiceTest.html
+|   |           |       
+|   |           +---css
+|   |           |       base-style.css
+|   |           |       style.css
+|   |           |       
+|   |           +---js
+|   |           |       report.js
+|   |           |       
+|   |           \---packages
+|   |                   com.surest.api.config.html
+|   |                   com.surest.api.controller.html
+|   |                   com.surest.api.exception.html
+|   |                   com.surest.api.integration.html
+|   |                   com.surest.api.mapper.html
+|   |                   com.surest.api.service.html
+|   |                   com.surest.api.service.impl.html
+|   |                   
+|   +---resources
+|   |   +---main
+|   |   |   |   application.yml
+|   |   |   |   
+|   |   |   \---db
+|   |   |       \---migration
+|   |   |               V1__init_schema.sql
+|   |   |               V2__seed_roles_and_users.sql
+|   |   |               
+|   |   \---test
+|   |           application-test.yml
+|   |           
+|   +---test-results
+|   |   \---test
+|   |       |   TEST-com.surest.api.config.DelegatedAuthenticationEntryPointTest.xml
+|   |       |   TEST-com.surest.api.config.JwtRequestFilterTest.xml
+|   |       |   TEST-com.surest.api.config.JwtTokenUtilTest.xml
+|   |       |   TEST-com.surest.api.config.WebConfigTest.xml
+|   |       |   TEST-com.surest.api.controller.AuthControllerTest.xml
+|   |       |   TEST-com.surest.api.controller.MemberControllerTest.xml
+|   |       |   TEST-com.surest.api.controller.RoleControllerTest.xml
+|   |       |   TEST-com.surest.api.controller.UserControllerTest.xml
+|   |       |   TEST-com.surest.api.exception.AccessDeniedExceptionTest.xml
+|   |       |   TEST-com.surest.api.exception.DefaultExceptionHandlerTest.xml
+|   |       |   TEST-com.surest.api.exception.InvalidLoginExceptionTest.xml
+|   |       |   TEST-com.surest.api.exception.ResourceNotFoundExceptionTest.xml
+|   |       |   TEST-com.surest.api.exception.RestErrorTest.xml
+|   |       |   TEST-com.surest.api.exception.UserNotFoundExceptionTest.xml
+|   |       |   TEST-com.surest.api.integration.MemberControllerIntegrationTest.xml
+|   |       |   TEST-com.surest.api.mapper.UserMapperTest.xml
+|   |       |   TEST-com.surest.api.service.impl.AuthenticationServiceImplTest.xml
+|   |       |   TEST-com.surest.api.service.impl.MemberServiceImplTest.xml
+|   |       |   TEST-com.surest.api.service.impl.RoleServiceImplTest.xml
+|   |       |   TEST-com.surest.api.service.impl.UserServiceImplTest.xml
+|   |       |   TEST-com.surest.api.service.SurestUserDetailsServiceTest.xml
+|   |       |   
+|   |       \---binary
+|   |               output.bin
+|   |               output.bin.idx
+|   |               results.bin
+|   |               
+|   \---tmp
+|       +---.cache
+|       |   \---expanded
+|       |       \---zip_b7e3e3efc9fa7b01ca2c5374419709e6
+|       |           |   about.html
+|       |           |   jacocoagent.jar
+|       |           |   
+|       |           +---META-INF
+|       |           |   |   MANIFEST.MF
+|       |           |   |   
+|       |           |   \---maven
+|       |           |       \---org.jacoco
+|       |           |           \---org.jacoco.agent
+|       |           |                   pom.properties
+|       |           |                   pom.xml
+|       |           |                   
+|       |           \---org
+|       |               \---jacoco
+|       |                   \---agent
+|       |                           AgentJar.class
+|       |                           package-info.class
+|       |                           
+|       +---bootJar
+|       |       MANIFEST.MF
+|       |       
+|       +---compileJava
+|       |   |   previous-compilation-data.bin
+|       |   |   
+|       |   \---compileTransaction
+|       |       +---backup-dir
+|       |       \---stash-dir
+|       |               AuthenticationServiceImpl.class.uniqueId1
+|       |               RoleServiceImpl.class.uniqueId0
+|       |               UserServiceImpl.class.uniqueId2
+|       |               
+|       +---compileTestJava
+|       |   |   previous-compilation-data.bin
+|       |   |   
+|       |   \---compileTransaction
+|       |       +---backup-dir
+|       |       \---stash-dir
+|       |               DelegatedAuthenticationEntryPointTest.class.uniqueId1
+|       |               JwtRequestFilterTest.class.uniqueId3
+|       |               JwtTokenUtilTest$1.class.uniqueId2
+|       |               JwtTokenUtilTest.class.uniqueId0
+|       |               WebConfigTest.class.uniqueId4
+|       |               
+|       \---test
++---gradle
+|   \---wrapper
+|           gradle-wrapper.jar
+|           gradle-wrapper.properties
+|           
+\---src
+    +---main
+    |   +---java
+    |   |   \---com
+    |   |       \---surest
+    |   |           \---api
+    |   |               |   SurestMemberManagementApplication.java
+    |   |               |   
+    |   |               +---config
+    |   |               |       AppConfig.java
+    |   |               |       DelegatedAuthenticationEntryPoint.java
+    |   |               |       JwtRequestFilter.java
+    |   |               |       JwtTokenUtil.java
+    |   |               |       SecurityConfig.java
+    |   |               |       SwaggerConfig.java
+    |   |               |       WebConfig.java
+    |   |               |       
+    |   |               +---controller
+    |   |               |       AuthController.java
+    |   |               |       MemberController.java
+    |   |               |       RoleController.java
+    |   |               |       UserController.java
+    |   |               |       
+    |   |               +---dto
+    |   |               |       AuthenticationResponse.java
+    |   |               |       CommonResponseDTO.java
+    |   |               |       MemberDTO.java
+    |   |               |       MemberPaginatedResponse.java
+    |   |               |       RoleDTO.java
+    |   |               |       SignIn.java
+    |   |               |       UserDTO.java
+    |   |               |       
+    |   |               +---exception
+    |   |               |       AccessDeniedException.java
+    |   |               |       DefaultExceptionHandler.java
+    |   |               |       InvalidLoginException.java
+    |   |               |       ResourceNotFoundException.java
+    |   |               |       RestError.java
+    |   |               |       UserNotFoundException.java
+    |   |               |       
+    |   |               +---mapper
+    |   |               |       MemberMapper.java
+    |   |               |       RoleMapper.java
+    |   |               |       UserMapper.java
+    |   |               |       
+    |   |               +---model
+    |   |               |       Member.java
+    |   |               |       Role.java
+    |   |               |       User.java
+    |   |               |       
+    |   |               +---repository
+    |   |               |       MemberRepository.java
+    |   |               |       RoleRepository.java
+    |   |               |       UserRepository.java
+    |   |               |       
+    |   |               \---service
+    |   |                   |   AuthenticationService.java
+    |   |                   |   MemberService.java
+    |   |                   |   RoleService.java
+    |   |                   |   SurestUserDetailsService.java
+    |   |                   |   UserService.java
+    |   |                   |   
+    |   |                   \---impl
+    |   |                           AuthenticationServiceImpl.java
+    |   |                           MemberServiceImpl.java
+    |   |                           RoleServiceImpl.java
+    |   |                           UserServiceImpl.java
+    |   |                           
+    |   \---resources
+    |       |   application.yml
+    |       |   
+    |       \---db
+    |           \---migration
+    |                   V1__init_schema.sql
+    |                   V2__seed_roles_and_users.sql
+    |                   
+    \---test
+        +---java
+        |   \---com
+        |       \---surest
+        |           \---api
+        |               +---config
+        |               |       DelegatedAuthenticationEntryPointTest.java
+        |               |       JwtRequestFilterTest.java
+        |               |       JwtTokenUtilTest.java
+        |               |       WebConfigTest.java
+        |               |       
+        |               +---controller
+        |               |       AuthControllerTest.java
+        |               |       MemberControllerTest.java
+        |               |       RoleControllerTest.java
+        |               |       UserControllerTest.java
+        |               |       
+        |               +---exception
+        |               |       AccessDeniedExceptionTest.java
+        |               |       DefaultExceptionHandlerTest.java
+        |               |       InvalidLoginExceptionTest.java
+        |               |       ResourceNotFoundExceptionTest.java
+        |               |       RestErrorTest.java
+        |               |       UserNotFoundExceptionTest.java
+        |               |       
+        |               +---integration
+        |               |       MemberControllerIT.java
+        |               |       
+        |               +---mapper
+        |               |       UserMapperTest.java
+        |               |       
+        |               \---service
+        |                   |   SurestUserDetailsServiceTest.java
+        |                   |   
+        |                   \---impl
+        |                           AuthenticationServiceImplTest.java
+        |                           MemberServiceImplTest.java
+        |                           RoleServiceImplTest.java
+        |                           UserServiceImplTest.java
+        |                           
+        \---resources
+                application-test.yml
+                
