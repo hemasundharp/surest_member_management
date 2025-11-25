@@ -2,6 +2,7 @@ package com.surest.api.service.impl;
 
 import com.surest.api.dto.MemberDTO;
 import com.surest.api.dto.MemberPaginatedResponse;
+import com.surest.api.exception.BusinessServiceException;
 import com.surest.api.exception.UserNotFoundException;
 import com.surest.api.mapper.MemberMapper;
 import com.surest.api.model.Member;
@@ -158,6 +159,7 @@ class MemberServiceImplTest {
 
     @Test
     void deleteMemberById_success() {
+        when(memberRepository.existsById(memberId)).thenReturn(true);
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
         memberService.deleteMemberById(memberId);
@@ -169,7 +171,7 @@ class MemberServiceImplTest {
     void deleteMemberById_notFound() {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class,
+        assertThrows(BusinessServiceException.class,
                 () -> memberService.deleteMemberById(memberId));
     }
 }

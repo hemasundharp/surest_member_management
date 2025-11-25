@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.surest.api.exception.BusinessServiceException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberMapper memberMapper;
@@ -36,6 +37,10 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberDTO createMember(MemberDTO dto) {
         log.info("Creating new member: {} {}", dto.getFirstName(), dto.getLastName());
+        if (memberRepository.existsByEmail(dto.getEmail())) {
+            throw new BusinessServiceException("Email already exists", HttpStatus.CONFLICT);
+        }
+
         Member member = memberMapper.toEntity(dto);
         member.setCreatedAt(LocalDateTime.now());
         member.setUpdatedAt(LocalDateTime.now());
@@ -106,6 +111,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void deleteMemberById(UUID id) {
         log.warn("Deleting member with ID: {}", id);
+        if (!memberRepository.existsById(id)) {
+            throw new BusinessServiceException("Member not found", HttpStatus.NOT_FOUND);
+        }
         Member existingMember = memberRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Member not found with ID: " + id));
         memberRepository.delete(existingMember);

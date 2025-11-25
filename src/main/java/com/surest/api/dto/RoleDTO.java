@@ -8,4 +8,5 @@ public class RoleDTO {
     @NotBlank(message = "Role name is required")
     private String name;
 
+    private Long version;
 }

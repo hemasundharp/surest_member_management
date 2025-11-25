@@ -26,4 +26,6 @@ public class UserDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<String> roleName;
+
+    private Long version;
 }

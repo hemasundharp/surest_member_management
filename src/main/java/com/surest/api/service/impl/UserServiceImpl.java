@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 @Slf4j
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -74,17 +73,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO createUser(UserDTO dto) {
         log.info("Creating user: {}", dto.getUsername());
-
         User user = userMapper.toEntity(dto);
-
-
         Set<Role> roles = dto.getRoleId().stream()
                 .map(roleId -> roleRepository.findById(roleId)
                         .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleId)))
                 .collect(Collectors.toSet());
-
         user.setRoles(roles);
-
         User savedUser = userRepository.save(user);
         log.info("User created successfully with ID: {}", savedUser.getId());
         return userMapper.toDto(savedUser);
@@ -121,13 +115,10 @@ public class UserServiceImpl implements UserService {
 
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
-
         existingUser.setUsername(dto.getUsername());
-
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-
         if (dto.getRoleId() != null && !dto.getRoleId().isEmpty()) {
             Set<Role> roles = dto.getRoleId().stream()
                     .map(roleId -> roleRepository.findById(roleId)
@@ -135,7 +126,6 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toSet());
             existingUser.setRoles(roles);
         }
-
         User updatedUser = userRepository.save(existingUser);
         log.info("User updated successfully: {}", updatedUser.getId());
         return userMapper.toDto(updatedUser);
@@ -146,12 +136,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteById(UUID id) {
         log.warn("Deleting user with ID: {}", id);
-
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
-
         userRepository.delete(existingUser);
-
         log.info("User deleted successfully");
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
@@ -67,4 +69,16 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re);
     }
+
+    @ExceptionHandler(BusinessServiceException.class)
+    public ResponseEntity<RestError> handleBusinessServiceException(BusinessServiceException ex, WebRequest request) {
+        RestError error = new RestError(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(error, ex.getStatus());
+    }
+
 }

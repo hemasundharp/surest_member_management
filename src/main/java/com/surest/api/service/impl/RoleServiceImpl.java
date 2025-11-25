@@ -21,7 +21,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;

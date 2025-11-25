@@ -14,7 +14,6 @@ import com.surest.api.service.AuthenticationService;
 @Service
 @AllArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
@@ -22,7 +21,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Authentication authenticateWithCredentials(String username, String password) {
         log.info("Attempting authentication for user: {}", username);
-
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
